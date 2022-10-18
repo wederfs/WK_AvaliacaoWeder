@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2022/10/16 23:27:09.000.731,C:\Teste\Teste_WK\TesteWK_WEDER\WKTechnology.dproj=C:\Teste\Teste_WK\TesteWK_WEDER\TESTEWK_Weder.dproj</Transaction>
+    <Transaction>2022/10/17 11:41:49.000.921,C:\Teste\Teste_WK\TesteWK_WEDER\Fonte\Views\View.UnPedidos.pas=</Transaction>
+    <Transaction>2022/10/17 11:42:06.000.117,=C:\Teste\Teste_WK\TesteWK_WEDER\Fonte\Classes\ClassClientes.pas</Transaction>
+    <Transaction>2022/10/17 11:42:06.000.184,=C:\Teste\Teste_WK\TesteWK_WEDER\Fonte\Classes\ClassControle.pas</Transaction>
+    <Transaction>2022/10/17 11:42:06.000.241,=C:\Teste\Teste_WK\TesteWK_WEDER\Fonte\Classes\ClassPedidosProdutos.pas</Transaction>
+    <Transaction>2022/10/17 11:42:06.000.212,=C:\Teste\Teste_WK\TesteWK_WEDER\Fonte\Classes\ClassPedidos.pas</Transaction>
+    <Transaction>2022/10/17 11:42:06.000.160,=C:\Teste\Teste_WK\TesteWK_WEDER\Fonte\Classes\ClassConexao.pas</Transaction>
+    <Transaction>2022/10/17 11:50:05.000.830,=C:\Teste\Teste_WK\TesteWK_WEDER\Unit1.pas</Transaction>
+    <Transaction>2022/10/17 11:51:09.000.616,C:\Teste\Teste_WK\TesteWK_WEDER\Fonte\untPrincipal.dfm=C:\Teste\Teste_WK\TesteWK_WEDER\Unit1.dfm</Transaction>
+    <Transaction>2022/10/17 11:51:09.000.616,C:\Teste\Teste_WK\TesteWK_WEDER\Fonte\untPrincipal.pas=C:\Teste\Teste_WK\TesteWK_WEDER\Unit1.pas</Transaction>
+    <Transaction>2022/10/17 12:09:02.000.577,=C:\Teste\Teste_WK\TesteWK_WEDER\Fonte\untLancamentoPedidos.pas</Transaction>
+    <Transaction>2022/10/17 13:31:50.000.156,=C:\Teste\Teste_WK\TesteWK_WEDER\Fonte\Classes\ClassProdutos.pas</Transaction>
+    <Transaction>2022/10/17 14:13:42.000.255,=C:\Teste\Teste_WK\TesteWK_WEDER\Unit1.pas</Transaction>
+    <Transaction>2022/10/17 14:16:00.000.017,C:\Teste\Teste_WK\TesteWK_WEDER\Fonte\untPesquisa.dfm=C:\Teste\Teste_WK\TesteWK_WEDER\Unit1.dfm</Transaction>
+    <Transaction>2022/10/17 14:16:00.000.017,C:\Teste\Teste_WK\TesteWK_WEDER\Fonte\untPesquisa.pas=C:\Teste\Teste_WK\TesteWK_WEDER\Unit1.pas</Transaction>
+  </Transactions>
+</BorlandProject>

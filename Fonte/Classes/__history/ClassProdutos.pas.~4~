@@ -1,0 +1,92 @@
+unit ClassProdutos;
+
+interface
+
+uses FireDac.Comp.Client, System.SysUtils, ClassControle, ClassConexao; 
+
+type
+
+  TClassProdutos = class
+  private
+    FCODIGO :Integer;
+    FDESCRICAO :String;
+    FPRECO_VENDA : Real;
+    procedure SetCODIGO(const Value: Integer);
+    procedure SetDESCRICAO(const Value: String);
+    procedure SetPRECO_VENDA(const Value: Real);
+  public
+    FConexao:TConexao;
+    Constructor Create();
+    destructor Destroy; override;
+    Function CarregarProdutos : TFDQuery;
+    Function PesquisaProduto( CODIGO: Integer ) : TFDQuery;
+    property CODIGO :Integer read FCODIGO write SetCODIGO;
+    property DESCRICAO :String read FDESCRICAO write SetDESCRICAO;
+    property PRECO_VENDA :Real read FPRECO_VENDA write SetPRECO_VENDA;
+  end;
+
+implementation
+
+{ TClassProdutos }
+
+Constructor TClassProdutos.Create;
+begin
+  FConexao := TClassControle.GetInstancia.Conexao;
+end;
+
+Destructor TClassProdutos.Destroy;
+begin
+  FreeAndNil(FConexao);
+  inherited;
+end;
+
+function TClassProdutos.PesquisaProduto(CODIGO: Integer): TFDQuery;
+var
+  VQuery : TFDQuery;
+begin
+  VQuery := FConexao.TQuery();
+  VQuery.open('SELECT * FROM TB_PRODUTOS WHERE CODIGO = ' + IntToStr(CODIGO));
+
+  if not VQuery.IsEmpty then
+  begin
+    with VQuery do
+    begin
+      Self.CODIGO := FieldByName('CODIGO').Value;
+      Self.DESCRICAO := FieldByName('DESCRICAO').Value;
+      Self.PRECO_VENDA := FieldByName('PRECO_VENDA').Value;
+    end;
+  end
+  else
+  begin
+    Self.CODIGO := 0;
+    Self.DESCRICAO   := '';
+    Self.PRECO_VENDA := 0;
+  end;
+  Result := VQuery;
+end;
+
+function TClassProdutos.CarregarProdutos: TFDQuery;
+var
+  VQuery : TFDQuery;
+begin
+  VQuery := FConexao.TQuery();
+  VQuery.open('SELECT * FROM TB_PRODUTOS ORDER BY DESCRICAO');
+  Result := VQuery;
+end;
+
+procedure TClassProdutos.SetPRECO_VENDA(const Value: Real);
+begin
+  FPRECO_VENDA := value;
+end;
+
+procedure TClassProdutos.SetCODIGO(const Value: Integer);
+begin
+  FCODIGO := value
+end;
+
+procedure TClassProdutos.SetDESCRICAO(const Value: String);
+begin
+  FDESCRICAO := value;
+end;
+
+end.

@@ -1,0 +1,198 @@
+unit ClassPedidosProdutos;
+
+interface
+
+uses FireDAC.Comp.Client, FireDac.Stan.param, System.SysUtils, ClassControle, ClassConexao;
+
+type
+  TClassPedidosProdutos = class
+  private
+    FCodigo_Pedido_Produto : Integer;
+    FNumeroPedido          : Integer;
+    FCodigo_Produto        : Integer;
+    FQuantidade            : Real;
+    FValor_Unitario        : Real;
+    FValor_Total           : Real;
+    FTipoAcao              : TTipoAcao;
+    procedure SetCodigo_Pedido_Produto(const Value:Integer);
+    procedure SetNumeroPedido(const Value: Integer);
+    procedure SetCodigo_Produto(const Value: Integer);   
+    procedure SetValor_Total(const Value: real);
+    procedure SetValor_Unitario(const Value: real);
+    procedure SetQuantidade(const Value: Real);
+    procedure SetTipoAcao(const Value: TTipoAcao);
+  public
+    function Salvar : boolean;
+    property Codigo_Pedido_Produto :Integer read FCodigo_Pedido_Produto write SetCodigo_Pedido_Produto;
+    property NumeroPedido          :Integer read FNumeroPedido write SetNumeroPedido;
+    property Codigo_Produto        :Integer read FCodigo_Produto write SetCodigo_Produto;
+    property Quantidade            :Real read FQuantidade write SetQuantidade;
+    property Valor_Unitario        :Real read FValor_Unitario write SetValor_Unitario;
+    property Valor_Total           :Real read FValor_Total write SetValor_Total;
+    property TipoAcao              :TTipoAcao read FTipoAcao write SetTipoAcao;
+    procedure Carregar(ANumeroPedido : integer);
+  end;
+
+  TCadastroPedidosProdutos = class
+    procedure CarregarPedidoProduto(APedidosprodutos : TClassPedidosProdutos; ANumeroPedido : Integer);
+    function Incluir(APedidosprodutos : TClassPedidosProdutos) : boolean;
+    function Excluir(APedidosprodutos : TClassPedidosProdutos) : boolean;
+    function Alterar(APedidosprodutos : TClassPedidosProdutos) : boolean;
+  private
+    FConexao : TConexao;
+  public
+    constructor Create;
+  end;
+
+implementation
+
+{TClassPedidosProdutos}
+
+procedure TClassPedidosProdutos.Carregar(ANumeroPedido: integer);
+var
+  VPedidosProdutos : TCadastroPedidosProdutos;
+begin
+  VPedidosProdutos := TCadastroPedidosProdutos.create;
+ try
+   VPedidosProdutos.CarregarPedidoProduto(self,ANumeroPedido);
+ finally
+   FreeAndNil(VPedidosProdutos);
+ end;
+end;
+
+function TClassPedidosProdutos.Salvar: boolean;
+var
+  VPedidosProdutos : TCadastroPedidosProdutos;
+begin
+  result := false;
+  VPedidosProdutos := TCadastroPedidosProdutos.create;
+  try
+    case FTipoAcao of
+      TTipoAcao.tpIncluir : Result := VPedidosProdutos.Incluir(self);
+      TTipoAcao.tpAlterar : Result := VPedidosProdutos.Alterar(self);
+      TTipoAcao.tpExcluir : Result := VPedidosProdutos.Excluir(self);
+    end;
+  finally
+    FreeAndNil(VPedidosProdutos);
+  end;
+end;
+
+procedure TClassPedidosProdutos.SetTipoAcao(const Value: TTipoAcao);
+begin
+  FTipoAcao := value;
+end;
+
+procedure TClassPedidosProdutos.SetCodigo_Pedido_Produto(const Value: Integer);
+begin
+  FCodigo_Pedido_Produto := value;
+end;
+
+procedure TClassPedidosProdutos.SetCodigo_Produto(const Value: Integer);
+begin
+  FCodigo_Produto := value;
+end;
+
+procedure TClassPedidosProdutos.SetNumeroPedido(const Value: Integer);
+begin
+  FNumeroPedido := value;
+end;
+
+procedure TClassPedidosProdutos.SetQuantidade(const Value: Real);
+begin
+  FQuantidade := value;
+end;
+
+procedure TClassPedidosProdutos.SetValor_Total(const Value: real);
+begin
+  FValor_Total := value;
+end;
+
+procedure TClassPedidosProdutos.SetValor_Unitario(const Value: real);
+begin
+  FValor_Unitario := value;
+end;
+
+{ TCadastroPedidosProdutos }
+
+function TCadastroPedidosProdutos.Alterar(APedidosprodutos: TClassPedidosProdutos): boolean;
+var 
+  FDQuery : TFDQuery;
+begin
+  FDQuery := TClassControle.GetInstancia.Conexao.TQuery;
+  try
+    FDQuery.ExecSQL('UPDATE TB_PEDIDOS_PRODUTOS '+
+                    '   SET QUANTIDADE=:QUANTIDADE, '+
+                    '       VALOR_TOTAL=:VALOR_TOTAL, '+
+                    '       VALOR_UNITARIO=:VALOR_UNITARIO '+
+                    ' WHERE CODIGO_PEDIDO_PRODUTO=:CODIGO_PEDIDO_PRODUTO',
+                    [APedidosprodutos.Quantidade, APedidosprodutos.Valor_Unitario,
+                     APedidosprodutos.Valor_Total,APedidosprodutos.Codigo_Pedido_Produto]);
+    Result := True;
+  finally
+    FreeAndNil(FDQuery);
+  end;
+end;
+
+procedure TCadastroPedidosProdutos.CarregarPedidoProduto(
+  APedidosprodutos: TClassPedidosProdutos; ANumeroPedido: Integer);
+var  
+  FDQuery : TFDQuery;
+begin
+  FDQuery := TClassControle.GetInstancia.Conexao.TQuery;
+  try
+    FDQuery.Open('SELECT * FROM TB_PEDIDOS_PRODUTOS WHERE NUMEROPEDIDO=:NUMEROPEDIDO',[ANumeroPedido]);
+    APedidosprodutos.Codigo_Pedido_Produto  := FDQuery.FieldByName('Codigo_Pedido_Produto').AsInteger;
+    APedidosprodutos.Numeropedido           := FDQuery.FieldByName('NumeroPedido').AsInteger;
+    APedidosprodutos.Codigo_produto         := FDQuery.FieldByName('Codigo_Produto').AsInteger;
+    APedidosprodutos.Quantidade             := FDQuery.FieldByName('Quantidade').AsFloat;
+    APedidosprodutos.Valor_Unitario         := FDQuery.FieldByName('Valor_Unitario').AsFloat;
+    APedidosprodutos.Valor_Total            := FDQuery.FieldByName('Valor_Total').AsFloat;
+  finally
+    FDQuery.Close;
+    FreeAndNil(FDQuery);
+  end;
+end;
+
+constructor TCadastroPedidosProdutos.Create;
+begin
+  FConexao := TClassControle.GetInstancia.Conexao;
+end;
+
+function TCadastroPedidosProdutos.Excluir(APedidosprodutos: TClassPedidosProdutos): boolean;
+var  
+  FDQuery : TFDQuery;
+begin
+  FDQuery := FConexao.TQuery;
+  try
+    FDQuery.ExecSQL('DELETE FROM TB_PEDIDOS_PRODUTOS WHERE NUMEROPEDIDO=:NUMEROPEDIDO',
+                     [APedidosprodutos.Numeropedido]);
+    Result := True;
+  finally
+    FreeAndNil(FDQuery);
+  end;
+end;
+
+function TCadastroPedidosProdutos.Incluir(APedidosprodutos: TClassPedidosProdutos): boolean;
+var 
+  FDQuery: TFdQuery;
+begin
+  FDQuery := TClassControle.GetInstancia.Conexao.TQuery;
+  try
+    FDQuery.Close;
+    FDQuery.SQL.Clear;
+    FDQuery.SQL.Text := 'INSERT INTO TB_PEDIDOS_PRODUTOS(CODIGO_PRODUTO,NUMEROPEDIDO,QUANTIDADE,VALOR_UNITARIO,VALOR_TOTAL) '+
+                         ' VALUES(:CODIGO_PRODUTO, :NUMEROPEDIDO,:QUANTIDADE, :VALOR_UNITARIO, :VALOR_TOTAL)';
+    FDQuery.ParamByName('CODIGO_PRODUTO').AsInteger := APedidosprodutos.Codigo_Produto;
+    FDQuery.ParamByName('NUMEROPEDIDO').AsInteger   := APedidosprodutos.NumeroPedido;
+    FDQuery.ParamByName('QUANTIDADE').AsFloat       := APedidosprodutos.Quantidade;
+    FDQuery.ParamByName('VALOR_UNITARIO').AsFloat   := APedidosprodutos.Valor_Unitario;
+    FDQuery.ParamByName('VALOR_TOTAL').AsFloat      := APedidosprodutos.Valor_Total;
+    FDQuery.ExecSQL;
+
+    Result := true;
+  finally
+    FreeAndNil(FDQuery);
+  end;
+end;
+
+end.
